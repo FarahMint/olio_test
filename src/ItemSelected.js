@@ -96,6 +96,7 @@ export default class ItemSelected extends Component {
                   src={`${this.props.originalImg(item)}`}
                   alt={item.title}
                   className="details-selected__img"
+                  title={item.title}
                 />
 
                 <div className="innercard__img">
@@ -105,6 +106,7 @@ export default class ItemSelected extends Component {
                     src={small}
                     alt={first_name}
                     className="innercard__avatar details"
+                    title={first_name}
                   />
                   <h3>{item.title}</h3>
 

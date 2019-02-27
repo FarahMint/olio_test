@@ -57,8 +57,11 @@ nav {
   margin: 0 auto;
   text-align: center;
 }
-h3 {
+.card-title {
   color: var(--mainGrey);
+  font-size: 1rem;
+  padding: 1rem 0;
+  text-align: center;
 }
 .flex__container {
   display: flex;
@@ -80,6 +83,7 @@ h3 {
 .item__container {
   /* grid-area: item; */
   box-shadow: -2px -1px 5px 0 rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
 }
 .card__img {
   display: flex;
@@ -169,11 +173,7 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .list__container {
-    width: 100vw;
-    grid-template-columns: 1fr 1fr;
-  }
-
+  /* MAP */
   main {
     grid-row: 1; /* NEW */
   }
@@ -181,10 +181,14 @@ h3 {
     height: 400px;
     margin-top: 5rem;
   }
-
+  /* LIST ITEMS */
   .flex__container {
     overflow-y: initial;
     margin-top: 2rem;
+  }
+  .list__container {
+    width: 100vw;
+    grid-template-columns: 1fr 1fr;
   }
 }
 @media only screen and (max-width: 550px) {

@@ -40,7 +40,6 @@ export default class App extends Component {
                 render={props => (
                   <div className="container">
                     <div className="flex__container">
-                      {/* <div className="list__container"> */}
                       <Items
                         {...props}
                         {...this.state}

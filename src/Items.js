@@ -27,7 +27,14 @@ export default class ItemSelected extends Component {
             return (
               <div key={items.id} className="item__container">
                 <Link to={`/${items.id}`}>
-                  <h3>{items.title}</h3>
+                  {items.title > 25 ? (
+                    <h1 className="card-title">{items.title}</h1>
+                  ) : (
+                    <h1 className="card-title">
+                      {items.title.substring(0, 25)}...
+                    </h1>
+                  )}
+                  {/* <h3>{items.title}</h3> */}
                   <div className="innercard__img">
                     <img
                       src={`${this.props.originalImg(items)}`}
@@ -41,6 +48,7 @@ export default class ItemSelected extends Component {
                       src={small}
                       alt={first_name}
                       className="innercard__avatar"
+                      title={first_name}
                     />
                     <span>{first_name}</span>
                   </div>
