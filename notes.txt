@@ -1,0 +1,6 @@
+-> display the list of articles on the page, 
+-> and possibly show a map with some interaction to link it to the article itself.
+
+Lastly, we'd like to be able to flag an article as 'seen', so when the user interacts with the article in some way it gets marked as such'. I'll leave you to decide what the interaction should be.
+
+ (bonus points for organising a collection 😀).
