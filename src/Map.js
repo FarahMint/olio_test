@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-
 import "./App.css";
 
-const API_KEY = `AIzaSyBxgTW-hEQrWjabgvgNEHynxw8mobSzZFQ
- `;
+const API_KEY = `AIzaSyBxgTW-hEQrWjabgvgNEHynxw8mobSzZFQ`;
+
 export class Map extends Component {
   loadMap = () => {
     loadScript(
@@ -18,7 +17,7 @@ export class Map extends Component {
     // GET DATA FROM STATE
     const { list } = this.props;
 
-    //  to make the browser access google -> window
+    //For the browser access google -> window
     const map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: 51.6111, lng: -0.10833 },
       zoom: 8
@@ -36,54 +35,66 @@ export class Map extends Component {
 
       // CREATE A MARKER
       const marker = new window.google.maps.Marker({
+        id: item.id,
         position: { lat: latitude, lng: longitude },
         map: map,
         title: item.title,
         animation: window.google.maps.Animation.DROP
       });
+
+      // CREATE CONTENT
+      const contentData = `<div class="info_box"><img src="${this.props.smallImg(
+        item
+      )}"</div> `;
+      // const contentData = `<div class="info_box"><img src="${this.props.smallImg(
+      //   item
+      // )}" <h4>${item.title}</h4>
+
+      // </div> `;
+
+      // EVENTS LISTENER
+
+      marker.addListener("mouseover", () => {
+        this.props.handleMouseEnter(item.id);
+        // set new content
+        infowindow.setContent(contentData);
+
+        // open window
+        infowindow.open(map, marker);
+
+        // console.log(item.id);
+        // *** ANIMATION ****
+        marker.setAnimation(window.google.maps.Animation.BOUNCE);
+        setTimeout(() => {
+          marker.setAnimation(null);
+        }, 1500);
+      });
+
+      marker.addListener("mouseout", () => {
+        // open window
+        infowindow.close();
+        // this.props.handleMouseEnter(item.id);
+        this.props.handleMouseLeave(item.id);
+      });
+
+      // LISTENER CLICK TO  REDIRECT TO ITEM DETAILS PAGE
       marker.addListener("click", () => {
         if (marker.getAnimation() !== null) {
           marker.setAnimation(null);
         } else {
           marker.setAnimation(window.google.maps.Animation.BOUNCE);
         }
-      });
-
-      // CREATE CONTENT
-      const contentData = `<div class="info_box"><img src="${this.props.smallImg(
-        item
-      )}" <h4>${item.title}</h4>
-       
-      </div> `;
-
-      // 2 EVENT LISTENER -
-
-      marker.addListener("mouseover", () => {
         // set new content
         infowindow.setContent(contentData);
-        // open window
-        infowindow.open(map, marker);
-
-        marker.setAnimation(window.google.maps.Animation.BOUNCE);
-        setTimeout(() => {
-          marker.setAnimation(null);
-          infowindow.close();
-        }, 1500);
-      });
-
-      marker.addListener("click", () => {
-        // set new content
-        infowindow.setContent(contentData);
-
-        // REDIRECT TO ITEM DETAILS PAGE
         this.props.history.push(`/${item.id}`);
-
         // open window
         infowindow.open(map, marker);
       });
+
       return marker;
     });
   };
+
   componentDidMount() {
     this.loadMap();
   }
@@ -91,10 +102,7 @@ export class Map extends Component {
   render() {
     return (
       <main>
-        <div
-          id="map"
-          //  style={{ width: "100%", height: "100vh" }}
-        />
+        <div id="map" />
       </main>
     );
   }

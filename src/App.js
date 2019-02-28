@@ -4,24 +4,53 @@ import ItemSelected from "./ItemSelected";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Map from "./Map";
 // IMPORT UTILS
-import { displaySmallImages, displayOriginalImages } from "./utils";
+import { displaySmallImages, displayOriginalImages, fetchData } from "./utils";
 
 import "./App.css";
 
 export default class App extends Component {
   state = {
-    list: []
-    // selection: false
+    list: [],
+    isHovered: {}
   };
 
+  // ------------------------------------
+  // Display all ITEMS
+  // ------------------------------------
+  getListItems() {
+    fetchData().then(list => {
+      this.setState(prevState => ({
+        list
+      }));
+    });
+    this.setState({ loading: true });
+  }
+
+  // hover
+  handleMouseEnter = index => {
+    this.setState(prevState => {
+      return { isHovered: { ...prevState.isHovered, [index]: true } };
+    });
+  };
+
+  handleMouseLeave = index => {
+    this.setState(prevState => {
+      return { isHovered: { ...prevState.isHovered, [index]: false } };
+    });
+  };
+
+  //  if hover get function to start the marker
+
   componentDidMount() {
-    let url = `https://s3-eu-west-1.amazonaws.com/olio-staging-images/developer/test-articles.json`;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => this.setState({ list: data }))
-      .catch(error => {
-        this.setState(error);
-      });
+    // let url = `https://s3-eu-west-1.amazonaws.com/olio-staging-images/developer/test-articles.json`;
+    // fetch(url)
+    //   .then(response => response.json())
+    //   .then(data => this.setState({ list: data }))
+    //   .catch(error => {
+    //     this.setState(error);
+    //   });
+
+    this.getListItems();
   }
 
   render() {
@@ -39,20 +68,25 @@ export default class App extends Component {
                 path="/"
                 render={props => (
                   <div className="container">
-                    <div className="flex__container">
-                      <Items
-                        {...props}
-                        {...this.state}
-                        originalImg={displayOriginalImages}
-                      />
-                    </div>
-
                     <Map
                       {...props}
                       {...this.state}
                       originalImg={displayOriginalImages}
                       smallImg={displaySmallImages}
+                      handleMouseEnter={this.handleMouseEnter}
+                      handleMouseLeave={this.handleMouseLeave}
+                      isHovering={this.state.isHovered}
                     />
+                    <div className="flex__container">
+                      <Items
+                        {...props}
+                        {...this.state}
+                        originalImg={displayOriginalImages}
+                        handleMouseEnter={this.handleMouseEnter}
+                        handleMouseLeave={this.handleMouseLeave}
+                        isHovering={this.state.isHovered}
+                      />
+                    </div>
                   </div>
                 )}
               />
@@ -65,7 +99,6 @@ export default class App extends Component {
                     {...this.state}
                     {...props}
                     originalImg={displayOriginalImages}
-                    itemselected={this.itemselected}
                   />
                 )}
               />

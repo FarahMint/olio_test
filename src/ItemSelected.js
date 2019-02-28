@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import "./App.css";
 
 export default class ItemSelected extends Component {
@@ -12,17 +10,17 @@ export default class ItemSelected extends Component {
     isSaved: false
   };
 
-  async getSelectedItem(id) {
+  getSelectedItem(id) {
     this.getItemWithLocalStorage();
 
-    let items = await this.props.list.filter(item => item.id === id);
+    let items = this.props.list.filter(item => item.id === id);
 
-    this.setState(() => ({ items, isSaved: true }));
+    this.setState({ items, isSaved: true }, this.saveStateToLocalStorage());
 
-    this.saveStateToLocalStorage();
+    // this.saveStateToLocalStorage();
   }
 
-  async getItemWithLocalStorage() {
+  getItemWithLocalStorage() {
     // for all items in state
     for (let key in this.state) {
       // if the key exists in localStorage
@@ -32,7 +30,7 @@ export default class ItemSelected extends Component {
 
         // parse the localStorage string and setState
         try {
-          value = await JSON.parse(value);
+          value = JSON.parse(value);
           this.setState({ [key]: value });
         } catch (e) {
           // handle empty string

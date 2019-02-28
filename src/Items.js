@@ -8,7 +8,7 @@ export default class ItemSelected extends Component {
   };
 
   render() {
-    console.log(this.props.list);
+    // console.log(this.state);
     return (
       <React.Fragment>
         <div className="flex__title">
@@ -24,17 +24,19 @@ export default class ItemSelected extends Component {
                 current_avatar: { small }
               }
             } = items;
+
             return (
-              <div key={items.id} className="item__container">
+              <div
+                key={items.id}
+                onMouseEnter={() => this.props.handleMouseEnter(items.id)}
+                onMouseLeave={() => this.props.handleMouseLeave(items.id)}
+                className={
+                  this.props.isHovered[items.id]
+                    ? "item__container selected"
+                    : "item__container"
+                }
+              >
                 <Link to={`/${items.id}`}>
-                  {items.title > 25 ? (
-                    <h1 className="card-title">{items.title}</h1>
-                  ) : (
-                    <h1 className="card-title">
-                      {items.title.substring(0, 25)}...
-                    </h1>
-                  )}
-                  {/* <h3>{items.title}</h3> */}
                   <div className="innercard__img">
                     <img
                       src={`${this.props.originalImg(items)}`}
@@ -43,6 +45,15 @@ export default class ItemSelected extends Component {
                       title={items.title}
                     />
                   </div>
+                  <h1 className="card-title">{items.title}</h1>
+
+                  {/* {items.title > 25 ? (
+                    <h1 className="card-title">{items.title}</h1>
+                  ) : (
+                    <h1 className="card-title">
+                      {items.title.substring(0, 25)}...
+                    </h1>
+                  )} */}
                   <div className="innercard__details">
                     <img
                       src={small}
