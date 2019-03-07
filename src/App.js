@@ -3,6 +3,7 @@ import Items from "./Items";
 import ItemSelected from "./ItemSelected";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Map from "./Map";
+
 // IMPORT UTILS
 import { displaySmallImages, displayOriginalImages, fetchData } from "./utils";
 
@@ -11,7 +12,8 @@ import "./App.css";
 export default class App extends Component {
   state = {
     list: [],
-    isHovered: {}
+    isHovered: {},
+    activeMarker: false
   };
 
   // ------------------------------------
@@ -23,34 +25,41 @@ export default class App extends Component {
         list
       }));
     });
-    this.setState({ loading: true });
   }
 
   // hover
   handleMouseEnter = index => {
     this.setState(prevState => {
-      return { isHovered: { ...prevState.isHovered, [index]: true } };
+      return {
+        isHovered: { ...prevState.isHovered, [index]: true },
+        activeMarker: true
+      };
     });
+
+    // animation={activeMarker ? (item.name === activeMarker.title ? '1' : '0') : '0'}
   };
 
   handleMouseLeave = index => {
     this.setState(prevState => {
-      return { isHovered: { ...prevState.isHovered, [index]: false } };
+      return {
+        isHovered: { ...prevState.isHovered, [index]: false },
+        activeMarker: false
+      };
     });
   };
 
-  //  if hover get function to start the marker
+  // handleMarker(marker) {
+  //   let flagItem = this.state.list.filter(item => item.id === marker.id);
+  //   console.log(flagItem);
+  // }
 
   componentDidMount() {
-    // let url = `https://s3-eu-west-1.amazonaws.com/olio-staging-images/developer/test-articles.json`;
-    // fetch(url)
-    //   .then(response => response.json())
-    //   .then(data => this.setState({ list: data }))
-    //   .catch(error => {
-    //     this.setState(error);
-    //   });
-
     this.getListItems();
+
+    // const  handleMarker = (marker) =>{
+    //   let flagItem = this.state.list.filter(item => item.id === marker.id);
+    //   console.log(flagItem);
+    // }
   }
 
   render() {
@@ -75,7 +84,6 @@ export default class App extends Component {
                       smallImg={displaySmallImages}
                       handleMouseEnter={this.handleMouseEnter}
                       handleMouseLeave={this.handleMouseLeave}
-                      isHovering={this.state.isHovered}
                     />
                     <div className="flex__container">
                       <Items
@@ -84,7 +92,7 @@ export default class App extends Component {
                         originalImg={displayOriginalImages}
                         handleMouseEnter={this.handleMouseEnter}
                         handleMouseLeave={this.handleMouseLeave}
-                        isHovering={this.state.isHovered}
+                        handleMarker={this.handleMarker}
                       />
                     </div>
                   </div>

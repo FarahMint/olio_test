@@ -4,6 +4,9 @@ import "./App.css";
 const API_KEY = `AIzaSyBxgTW-hEQrWjabgvgNEHynxw8mobSzZFQ`;
 
 export class Map extends Component {
+  state = {
+    markers: []
+  };
   loadMap = () => {
     loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`
@@ -16,16 +19,18 @@ export class Map extends Component {
   initMap = () => {
     // GET DATA FROM STATE
     const { list } = this.props;
+    let markers = [];
 
     //For the browser access google -> window
     const map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: 51.6111, lng: -0.10833 },
       zoom: 8
     });
+    this.map = map;
 
     // CREATE AN INFO WINDOW
     const infowindow = new window.google.maps.InfoWindow({});
-
+    this.infowindow = infowindow;
     // for each item we want to create a marker
     list.map(item => {
       // DESTRUCTURE OBJ TO GET LOCATION DETAILS
@@ -34,23 +39,20 @@ export class Map extends Component {
       } = item;
 
       // CREATE A MARKER
-      const marker = new window.google.maps.Marker({
+      let marker = new window.google.maps.Marker({
         id: item.id,
         position: { lat: latitude, lng: longitude },
         map: map,
         title: item.title,
-        animation: window.google.maps.Animation.DROP
+        animation: window.google.maps.Animation.DROP,
+        activeMarker: this.props.activeMarker
       });
+      this.marker = marker;
 
       // CREATE CONTENT
       const contentData = `<div class="info_box"><img src="${this.props.smallImg(
         item
       )}"</div> `;
-      // const contentData = `<div class="info_box"><img src="${this.props.smallImg(
-      //   item
-      // )}" <h4>${item.title}</h4>
-
-      // </div> `;
 
       // EVENTS LISTENER
 
@@ -91,12 +93,40 @@ export class Map extends Component {
         infowindow.open(map, marker);
       });
 
-      return marker;
+      markers = markers.concat(marker);
+
+      return this.marker;
+    });
+    this.setState(prevState => {
+      return {
+        markers
+      };
     });
   };
 
   componentDidMount() {
     this.loadMap();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let item_flag;
+    this.props.list.map(item => {
+      if (this.props.isHovered[item.id] !== prevProps.isHovered[item.id]) {
+        item_flag = this.state.markers.find(marker => marker.id === item.id);
+        const contentData = `<div class="info_box"><img src="${this.props.smallImg(
+          item
+        )}"</div> `;
+        this.infowindow.setContent(contentData);
+        this.props.activeMarker
+          ? this.infowindow.open(this.map, item_flag)
+          : this.closeWindow();
+      }
+      return item_flag;
+    });
+  }
+
+  closeWindow() {
+    this.infowindow.close();
   }
 
   render() {
