@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 
-const API_KEY = `AIzaSyBxgTW-hEQrWjabgvgNEHynxw8mobSzZFQ`;
+const REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
 
 export class Map extends Component {
   state = {
@@ -9,7 +9,7 @@ export class Map extends Component {
   };
   loadMap = () => {
     loadScript(
-      `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`
+      `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_API_KEY}&callback=initMap`
     );
     //Initialize initMap => for JS to render the init map
     //To keep it visible we convert it to the window obj
